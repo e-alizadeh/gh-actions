@@ -1,6 +1,6 @@
 # ✅ HF Space Sync
 
-> A lightweight GitHub Action that verifies your Hugging Face Space exists and force-syncs your GitHub **main** branch to the Space’s **main** branch.
+> A lightweight GitHub Action that verifies your Hugging Face Space exists and force-syncs your GitHub **main** branch to the Space's **main** branch.
 
 ---
 
@@ -21,8 +21,8 @@ No extra branch configuration—just trigger on `main` and your Space stays in l
 
 | Name       | Description                                                                                 | Required |  
 |------------|---------------------------------------------------------------------------------------------|:--------:|  
-| `hf_user`  | Your Hugging Face username or organization (e.g. `ealizadeh`).                              |   ✅ Yes  |  
-| `hf_space` | The name of your Hugging Face Space (e.g. `GAIA-Agent`). **Do not** include the `user/` prefix. |   ✅ Yes  |  
+| `hf_user`  | Your Hugging Face username or organization.                              |   ✅ Yes  |  
+| `hf_space` | The name of your Hugging Face Space. **Do not** include the `user/` prefix. |   ✅ Yes  |  
 | `hf_token` | Your Hugging Face API token with **write** permissions on the Space. Store this as a GitHub secret. |   ✅ Yes  |  
 
 ### How to store HF_TOKEN as a GitHub Secret
@@ -56,7 +56,7 @@ jobs:
       - name: ✅ HF Space Sync
         uses: e-alizadeh/gh-actions/hf-space-sync@main
         with:
-          hf_user:  "ealizadeh"     # e.g. "ealizadeh"
+          hf_user:  "ealizadeh"   
           hf_space: "test-gh-actions"                # just the Space’s name
           hf_token: ${{ secrets.HF_TOKEN }}     # write-enabled HF token
 ```
