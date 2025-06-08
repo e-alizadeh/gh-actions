@@ -25,6 +25,15 @@ No extra branch configuration—just trigger on `main` and your Space stays in l
 | `hf_space` | The name of your Hugging Face Space (e.g. `GAIA-Agent`). **Do not** include the `user/` prefix. |   ✅ Yes  |  
 | `hf_token` | Your Hugging Face API token with **write** permissions on the Space. Store this as a GitHub secret. |   ✅ Yes  |  
 
+### How to store HF_TOKEN as a GitHub Secret
+1. Open the repository settings in your browser
+2. Navigate to Settings > Secrets and variables > Actions
+3. Click "New repository secret" and add the following:
+    ```
+    Name: HF_TOKEN
+    Value: <your_write_enabled_hf_token>
+    ```
+
 ---
 
 ## 🔧 Usage
@@ -45,9 +54,9 @@ jobs:
 
     steps:
       - name: ✅ HF Space Sync
-        uses: e-alizadeh/gh-actions/hf-space-sync@v1.0.0
+        uses: e-alizadeh/gh-actions/hf-space-sync@main
         with:
           hf_user:  "ealizadeh"     # e.g. "ealizadeh"
-          hf_space: "GAIA-Agent"                # just the Space’s name
+          hf_space: "test-gh-actions"                # just the Space’s name
           hf_token: ${{ secrets.HF_TOKEN }}     # write-enabled HF token
 ```
