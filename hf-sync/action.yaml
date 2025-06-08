@@ -1,0 +1,56 @@
+name: "🤗 HuggingFace Space Sync"
+description: "When you push to GitHub's main, verify the HF Space exists and overwrite its main branch."
+
+inputs:
+  hf_user:
+    description: "HuggingFace username or org (e.g. 'ealizadeh')"
+    required: true
+  hf_space:
+    description: "Name of your HuggingFace Space (e.g. 'GAIA-Agent')"
+    required: true
+  hf_token:
+    description: "HuggingFace API token (store as a GitHub secret with write permissions!)"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: "⬇️ Check out repository"
+      uses: "actions/checkout@v4"
+      with:
+        fetch-depth: 0
+        lfs: true
+
+    - name: "🔍 Compute full repo path"
+      shell: bash
+      run: |
+        export FULL_REPO="${{ inputs.hf_user }}/${{ inputs.hf_space }}"
+        echo "✅ Full repo: ${FULL_REPO}"
+        echo "FULL_REPO=${FULL_REPO}" >> $GITHUB_ENV
+
+    - name: "🔍 Verify HF Space exists"
+      shell: bash
+      run: |
+        echo "🔍 Checking https://huggingface.co/spaces/${FULL_REPO}.git"
+        if git ls-remote "https://huggingface.co/spaces/${FULL_REPO}.git" &>/dev/null; then
+          echo "✅ Space found, will sync main → main."
+        else
+          echo "❌ Space not found at https://huggingface.co/spaces/${FULL_REPO}.git !"
+          exit 1
+        fi
+
+    - name: "🚚 Sync main → main on HF"
+      shell: bash
+      env:
+        HF_USER:   ${{ inputs.hf_user }}
+        HF_SPACE:  ${{ inputs.hf_space }}
+        HF_TOKEN:  ${{ inputs.hf_token }}
+        FULL_REPO: ${{ env.FULL_REPO }}
+      run: |
+        echo "🚚 Pushing local HEAD (GitHub main) → ${FULL_REPO}:main (force)…"
+        if git push -f "https://${HF_USER}:${HF_TOKEN}@huggingface.co/spaces/${FULL_REPO}.git" HEAD:main; then
+          echo "🎉 Sync complete!"
+        else
+          echo "🔥 Push failed - check that HF_TOKEN has write access to ${FULL_REPO}."
+          exit 1
+        fi

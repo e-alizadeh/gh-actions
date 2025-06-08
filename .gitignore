@@ -1,0 +1,13 @@
+# OS files
+.DS_Store
+
+# Editor directories and files
+.vscode/
+.idea/
+
+# Node modules (just in case you add JS-based actions later)
+node_modules/
+
+# Logs
+logs/
+*.log
